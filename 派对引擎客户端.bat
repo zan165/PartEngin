@@ -22,7 +22,7 @@ set isDebug=true
 
 
 set debugPath=%CD%\..\public
-set PARTY_HOME=\\Fuwuqi\服务器3-搜集图片案例\材料包\豆丫派对
+set PARTY_HOME=%CD%
 set releasePath=\\Fuwuqi\服务器3-搜集图片案例\材料包\材料包素材\每日设计材料包
 set MOUDLES_DIR=%PARTY_HOME%\assets\Moudles
 set MOUDLEFILE_DIR=%PARTY_HOME%\assets\ModelFile
@@ -53,8 +53,8 @@ if errorlevel == 1 goto end
 
 :init
 
-set month=%date:~8,2%
-set day=%date:~11,2%
+set month=%date:~5,2%
+set day=%date:~8,2%
 set d=%month%.%day%
 
 echo 当前日期是 %d% 
@@ -75,7 +75,11 @@ echo !PUBLIC_DIR!\%fname%
 
 if not exist !PUBLIC_DIR!\%fname% (mkdir !PUBLIC_DIR!\%fname%)
 
-if not exist !PUBLIC_DIR!\%fname%\说明.txt  (copy %MOUDLEFILE_DIR%\_.txt !PUBLIC_DIR!\%fname%\说明.txt )
+
+::if not exist !PUBLIC_DIR!\%fname%\说明.txt  (copy %MOUDLEFILE_DIR%\_.txt !PUBLIC_DIR!\%fname%\说明.txt )
+::减少判断 增加效率
+copy %MOUDLEFILE_DIR%\_.txt !PUBLIC_DIR!\%fname%\说明.txt
+
 
 set dialogStr=%pName%————%d%_%fname%
 
@@ -104,6 +108,9 @@ goto insert_bg_picLoop
 
 :uniqueBg
 	set dialogStr=!dialogStr!-定制背景-
+	
+	echo dialogStr：：  !dialogStr!
+	pause
 	goto toEnd
 
 :pictureLoop
@@ -127,7 +134,11 @@ goto pictureLoop
 
 set dialogStr=!dialogStr!XXX%totalPrice%
 start explorer !PUBLIC_DIR!\%fname%
+::日志写入服务器
 start WriteDialog.bat !dialogStr!  
+::日志写入本地
+START WriteClientDialog.bat !dialogStr!  
+
 
 
 
