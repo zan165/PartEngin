@@ -36,7 +36,7 @@ set PHOTOGUIDE=%PARTY_HOME%\assets\PhotoGuid
 set pName=阿千
 ::如果生产环境目录不存在 就是测试目录
 ::if not exist %releasePath%\!pName! (set isDebug=true )
-set isDebug=false
+set isDebug=true
 echo !isDebug! !pName!
 
 
@@ -61,17 +61,29 @@ echo 当前日期是 %d%
 
 set /p totalPrice=总价：
 
-set /p  s= 发货时间,布置时间： 
-echo 发货时间,布置时间： %s%
+set /p address=地址：
+
+call :addr %address% 
+
+set /p psInfo=备注:
+
+call :STR_PS %psInfo%
+echo !str1!  !str2!
+
+set  s= !str1!，!str2!
+echo 发货时间,布置时间： !s!
 
 
-set /p custum=请输入收货人姓名：
 
-set fname="%s%,收货人：%custum%"
+REM set /p custum=请输入收货人姓名：
+set fname="!s!，收货人：%addr0%"
 
 echo %fname%
 
 echo !PUBLIC_DIR!\%fname%
+
+
+
 
 if not exist !PUBLIC_DIR!\%fname% (mkdir !PUBLIC_DIR!\%fname%)
 
@@ -80,6 +92,13 @@ if not exist !PUBLIC_DIR!\%fname% (mkdir !PUBLIC_DIR!\%fname%)
 ::减少判断 增加效率
 copy %MOUDLEFILE_DIR%\_.txt !PUBLIC_DIR!\%fname%\说明.txt
 
+echo 说明：%psInfo%>!PUBLIC_DIR!\%fname%\说明.txt
+echo.>>!PUBLIC_DIR!\%fname%\说明.txt
+echo.>>!PUBLIC_DIR!\%fname%\说明.txt
+echo 发货：背景全套>>!PUBLIC_DIR!\%fname%\说明.txt
+echo.>>!PUBLIC_DIR!\%fname%\说明.txt
+echo.>>!PUBLIC_DIR!\%fname%\说明.txt
+echo 地址：%address% >>!PUBLIC_DIR!\%fname%\说明.txt
 
 set dialogStr=%pName%————%d%_%fname%
 
@@ -135,12 +154,44 @@ goto pictureLoop
 set dialogStr=!dialogStr!XXX%totalPrice%
 start explorer !PUBLIC_DIR!\%fname%
 ::日志写入服务器
-start WriteDialog.bat !dialogStr!  
+::start WriteDialog.bat !dialogStr!  
 ::日志写入本地
 START WriteClientDialog.bat !dialogStr!  
 
 
+goto :end
 
+
+rem 拆分备注信息
+:STR_PS
+
+REM 看看每次循环后的值，便于理解
+set str0=%~1
+set str1=%~2
+set str2=%~3
+set str3=%~4
+set str4=%~5
+
+goto :eof
+
+
+rem 拆分地址信息
+:addr
+::rem 注意这里的s定义，其值不是使用双引号引起来的
+::rem  also works for comma-separated lists, e.g. ABC,DEF,GHI,JKL
+::set s=%~1
+set /a count=0
+for %%a in (%~1) do ( 
+if !count! equ 0 set addr0=%%a
+if !count! equ 1 set addr1=%%a
+if !count! equ 2 set addr2=%%a
+if !count! equ 3 set addr3=%%a
+if !count! equ 4 set addr4=%%a
+set /a count=!count!+1
+)
+
+
+goto :eof
 
  
 :end
