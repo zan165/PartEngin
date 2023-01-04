@@ -1,18 +1,17 @@
 @echo off
-REM 澹版槑閲囩敤UTF-8缂栫爜
-chcp 65001
+REM 声明采用UTF-8编码
 SetLocal ENABLEDELAYEDEXPANSION
 
-echo '鎷疯礉BackGround鐩綍鍐呯殑.jpg鏂囦欢鍒癕oudles鐩綍'
-::鍗忚鏂囦欢杈撳叆鐩綍
+echo '拷贝BackGround目录内的.jpg文件到Moudles目录'
+::协议文件输入目录
 set RUN_DIR=%CD%\..\assets\BackGround
 
-::鍗忚鏂囦欢杈撳嚭鐩綍
+::协议文件输出目录
 set OUTPUT_DIR=%CD%\..\assets\Moudles
 if not exist %OUTPUT_DIR% (mkdir %OUTPUT_DIR%)
 CD %RUN_DIR%
  FOR %%a in (*.jpg) do ( 
-	echo 杩涘叆for寰幆
+	echo 进入for循环
 	set "name=%%a" 
 	set "name=!name:.jpg=!" 
 	echo name !name!
