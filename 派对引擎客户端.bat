@@ -33,12 +33,23 @@ set MODELBG=%PARTY_HOME%\assets\BackGround
 set PHOTOGUIDE=%PARTY_HOME%\assets\PhotoGuid
 
 
-set pName=阿千
+set pName=阿千\待设计
+set /p chooseServer=是谁的订单,输入0退出，输入1林宝，输入2 张 输入3曾志康 输入4 阿千
+if /i '!chooseServer!'=='0' goto toEnd
+if /i '!chooseServer!'=='1' set pName=林宝\待设计
+if /i '!chooseServer!'=='2' set pName=张\待设计
+if /i '!chooseServer!'=='3' set pName=曾志康\待设计
+if /i '!chooseServer!'=='4' set pName=阿千\待设计
+
+REM set pName=林宝\待设计
+REM set pName=张\待设计
+REM set pName=曾志康\待设计
+
 ::如果生产环境目录不存在 就是测试目录
 ::if not exist %releasePath%\!pName! (set isDebug=true )
-set isDebug=true
+set isDebug=false
 echo !isDebug! !pName!
-
+set
 
 
 if "!isDebug!"=="true" (
@@ -59,7 +70,7 @@ set d=%month%.%day%
 
 echo 当前日期是 %d% 
 
-set /p totalPrice=总价：
+set totalPrice=0
 
 set /p address=地址：
 
@@ -126,10 +137,13 @@ if exist %MOUDLES_DIR%\"%isInsertBg%" (
 goto insert_bg_picLoop
 
 :uniqueBg
-	set dialogStr=!dialogStr!-定制背景-
+
+	set /p uniqueBgName=定制款式命名： 
+	mkdir %MOUDLES_DIR%\"%uniqueBgName%" 
+
+	set dialogStr=!dialogStr!-定制背景-%uniqueBgName%-
 	
 	echo dialogStr：：  !dialogStr!
-	pause
 	goto toEnd
 
 :pictureLoop
@@ -154,7 +168,7 @@ goto pictureLoop
 set dialogStr=!dialogStr!XXX%totalPrice%
 start explorer !PUBLIC_DIR!\%fname%
 ::日志写入服务器
-::start WriteDialog.bat !dialogStr!  
+start WriteDialog.bat !dialogStr!  
 ::日志写入本地
 START WriteClientDialog.bat !dialogStr!  
 
